@@ -1,11 +1,11 @@
 const { sequelize } = require('../config/db.config');
-const Menu = require('./menu.model');
+const { Menu } = require('./menu.model');
 const { Order, OrderStatus } = require('./order.model');
 const OrderItem = require('./orderItem.model');
 
 
 // Defining Relationships between the tables
-Order.hasMany(OrderItem, { foreignKey: 'orderId', as: 'items', onDelete: 'CASCAADE' });
+Order.hasMany(OrderItem, { foreignKey: 'orderId', as: 'items', onDelete: 'CASCADE' });
 OrderItem.belongsTo(Order, { foreignKey: 'orderId' });
 
 Menu.hasMany(OrderItem, { foreignKey: 'menuId' });

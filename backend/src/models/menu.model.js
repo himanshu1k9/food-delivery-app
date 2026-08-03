@@ -33,4 +33,4 @@ const Menu = sequelize.define('menu', {
     timestamps: true,
 });
 
-module.exports = Menu;
+module.exports = { Menu, sequelize }
