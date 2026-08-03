@@ -22,7 +22,10 @@ const app = express();
  * Middlewares
  */
 app.use(helmet()); // For security headers
-app.use(cors());  // Enabling CORS
+app.use(cors({
+    origin: ['http://localhost:5173', /\.vercel\.app$/],
+    credentials: true
+}));  // Enabling CORS
 app.use(morgan('dev')); // For logging in develoment environment
 app.use(express.json()); // for parsing the body
 
