@@ -26,6 +26,10 @@ class OrderRepository {
         });
     }
 
+    async getById(id) {
+        return this.orderModel.findByPk(id);
+    }
+
     async getByIdWithDetails(id) {
         return this.orderModel.findByPk(id, {
             include: [{
@@ -34,6 +38,16 @@ class OrderRepository {
                 include: [{ model: Menu, as: 'menuDetails' }]
             }]
         });
+    }
+
+    // Standard Sequelize update returning the updated instance
+    async updateStatus(id, status) {
+        const order = await this.orderModel.findByPk(id);
+        if (!order) return null;
+
+        order.status = status;
+        await order.save();
+        return order;
     }
 }
 

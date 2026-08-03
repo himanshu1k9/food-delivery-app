@@ -1,5 +1,5 @@
 const app = require('./src/app'); // importing app
-const { connectDB } = require('./src/config/db.config');
+const { connectDB, sequelize } = require('./src/config/db.config');
 const dotenv = require('dotenv');
 
 dotenv.config();

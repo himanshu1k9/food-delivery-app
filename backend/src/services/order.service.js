@@ -1,11 +1,13 @@
 const orderRepository = require('../repositories/order.repository');
 const menuRepository = require('../repositories/menu.repository');
 const ApiError = require('../utils/ApiError');
+const sseManager = require('../utils/SseManager');
 
 class OrderService {
-    constructor(repo, menuRepo) {
+    constructor(repo, menuRepo, sse) {
         this.repo = repo;
         this.menuRepo = menuRepo;
+        this.sse = sse;
     }
 
     async placeNewOrder(orderPayload) {
@@ -42,6 +44,26 @@ class OrderService {
 
         return savedOrder;
     }
+
+    async getOrderDetails(orderId) {
+        const order = await this.repo.getByIdWithDetails(orderId);
+        if (!order) throw ApiError.notFound('Order not found');
+        return order;
+    }
+
+    async updateOrderStatusAndNotify(orderId, newStatus) {
+        const order = await this.repo.getById(orderId);
+        if (!order) throw ApiError.notFound('Order not found');
+
+        // Persist change to DB
+        const updatedOrder = await this.repo.updateStatus(orderId, newStatus);
+
+        // Publish event to SSE Manager (Observer Pattern trigger)
+        // Non-blocking call. We don't wait for subscribers to receive it.
+        this.sse.publishStatusUpdate(orderId, newStatus);
+
+        return updatedOrder;
+    }
 }
 
-module.exports = new OrderService(orderRepository, menuRepository);
+module.exports = new OrderService(orderRepository, menuRepository, sseManager);

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { OrderStatus } = require('../models/order.model');
 
 const placeOrderSchema = Joi.object({
     customerName: Joi.string().required().trim(),
@@ -12,4 +13,8 @@ const placeOrderSchema = Joi.object({
     ).min(1).required(),
 });
 
-module.exports = { placeOrderSchema };
+const updateOrderStatusSchema = Joi.object({
+    status: Joi.string().valid(...Object.values(OrderStatus)).required(),
+});
+
+module.exports = { placeOrderSchema, updateOrderStatusSchema };

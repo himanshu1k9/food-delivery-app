@@ -42,4 +42,4 @@ const Order = sequelize.define('order', {
     timestamps: true,
 });
 
-module.exports = { Order };
+module.exports = { Order, OrderStatus };
